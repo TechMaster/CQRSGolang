@@ -25,8 +25,9 @@ func ConnectDb() error {
 
 func InitSchema() {
 	var account proto.Account
+	var event proto.Event
 	// Tạo bảng
-	for _, model := range []interface{}{&account} {
+	for _, model := range []interface{}{&account, &event} {
 		err := Db.CreateTable(model, &orm.CreateTableOptions{
 			Temp:          false,
 			FKConstraints: true,

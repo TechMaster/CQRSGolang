@@ -64,10 +64,20 @@ func (bs *BankService) CreateAccount(ctx context.Context, req *proto.NewAccount,
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	//See this tutorial https://medium.com/@pokstad/sending-any-any-thing-in-golang-with-protobuf-3-95f84838028d
 	event.Payload = &google_protobuf2.Any{
 		TypeUrl:"github.com/TechMaster/microKafka/RestGRPCKafka/proto/" + reflect.TypeOf(account).String(),
 		Value: serialized,
 	}
+
+	//Append event record into back end database table events
+	if err := Db.Insert(&event); err != nil {
+		resp.ErrorCode = 300
+		resp.ErrorDesc = "Fail to insert event store: " + err.Error()
+		return nil
+	}
+
 
 	//Publish event to Kafka
 	if err := bs.BankAccountPub.Publish(context.Background(), &event); err != nil {

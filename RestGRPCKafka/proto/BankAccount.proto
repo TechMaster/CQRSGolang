@@ -48,8 +48,6 @@ message Event {
     string type = 2;
     int64  timestamp = 3; //Unix timestamp
     google.protobuf.Any payload = 4;
-
-
 }
 message Deposit {
     string id = 1;
