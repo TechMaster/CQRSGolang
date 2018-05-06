@@ -1,0 +1,67 @@
+syntax = "proto2";
+
+package Bank;
+
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+//import "google/protobuf/timestamp.proto";
+
+/* Request không có tham số */
+message EmptyRequest {}
+
+message NewAccount {
+    // Full name of user
+    required string name = 1;
+
+    //Initial balance amount
+    required int64 balance = 2;
+}
+
+// Bảng lưu danh sách User
+message Account {
+    // Globally unique user id. By default it is primary key
+    required string id = 1;
+
+    // Login name must be unique
+    optional string name = 2 [(gogoproto.moretags) = "sql:\",unique\""];
+
+    //Amount money in bank account
+    optional int64 balance = 3;
+}
+
+
+
+message AccountBalance {
+    required string id = 1;
+
+    //Amount money in bank account
+    optional int64 balance = 2;
+}
+
+
+message Deposit {
+    required string id = 1;
+    required int64 amount = 2;
+}
+
+message WithDraw {
+    required string id = 1;
+    required int64 amount = 2;
+}
+
+message Transfer {
+    required string fromID = 1;
+    required string toID = 2;
+    required int64 amount = 3;
+}
+
+service BankService {
+    rpc CreateAccount(NewAccount) returns (Account);
+
+  //  rpc DepositMoney(Account) returns (AccountBalance);
+
+  //  rpc WithdrawMoney(Account) returns (AccountBalance);
+
+  //  rpc TransferMoney(Transfer) returns (AccountBalance);
+
+}

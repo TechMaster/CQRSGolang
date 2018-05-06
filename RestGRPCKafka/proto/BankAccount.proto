@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package Bank;
+
+
+import  "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import  "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+
+/* Request không có tham số */
+message EmptyRequest {}
+
+message NewAccount {
+    // Full name of user
+    string name = 1;
+
+    //Initial balance amount
+    int64 balance = 2;
+}
+
+// Bảng lưu danh sách User
+message Account {
+    // Globally unique user id. By default it is primary key
+    string id = 1;
+
+    // Login name must be unique
+    string name = 2 [(gogoproto.moretags) = "sql:\",unique\""];
+
+    //Amount money in bank account
+    int64 balance = 3;
+}
+
+message Response {
+    int32 errorCode = 1;
+    string errorDesc = 2;
+    Account account = 3;
+}
+
+message AccountBalance {
+    string id = 1;
+    //Amount money in bank account
+    int64 balance = 2;
+}
+
+message Event {
+    string id = 1;
+    string type = 2;
+    int64  timestamp = 3; //Unix timestamp
+    google.protobuf.Any payload = 4;
+
+
+}
+message Deposit {
+    string id = 1;
+    int64 amount = 2;
+}
+
+message WithDraw {
+    string id = 1;
+    int64 amount = 2;
+}
+
+message Transfer {
+    string fromID = 1;
+    string toID = 2;
+    int64 amount = 3;
+}
+
+service BankService {
+    rpc CreateAccount(NewAccount) returns (Response);
+
+    //  rpc DepositMoney(Account) returns (AccountBalance);
+
+    //  rpc WithdrawMoney(Account) returns (AccountBalance);
+
+    //  rpc TransferMoney(Transfer) returns (AccountBalance);
+
+}
